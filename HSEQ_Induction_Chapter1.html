@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HSEQ Induction Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#0d1f3c;--blue:#1e4fa8;--lt:#2563c4;
+  --teal:#00a896;--teallt:#e0f4f1;
+  --pale:#e8eef8;--bdr:#c5d5ef;
+  --green:#1a8a4a;--greenlt:#e8f8ef;
+  --orange:#e67e22;--orlt:#fef0e2;
+  --red:#c0392b;--redlt:#fdecea;
+  --white:#fff;--off:#f4f7fc;--muted:#6b7a99;--text:#1a2340;
+}
+html,body{width:100%;min-height:100%;background:var(--off);font-family:'Inter',sans-serif;color:var(--text)}
+
+/* ── HEADER ── */
+.header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.3)}
+.header-logo{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:900;color:white;letter-spacing:2px}
+.header-logo span{color:var(--teal)}
+.header-right{text-align:right}
+.header-right .hr-title{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:white;letter-spacing:1px}
+.header-right .hr-sub{font-size:9px;color:rgba(255,255,255,0.45);margin-top:2px}
+.header-bar{height:4px;background:linear-gradient(90deg,var(--teal),#2563c4,var(--teal))}
+
+/* ── WRAP ── */
+.wrap{max-width:600px;margin:0 auto;padding:16px 14px 60px}
+
+/* ── SCREENS ── */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── REGISTRATION SCREEN ── */
+.reg-hero{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:16px;padding:24px 20px;text-align:center;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.reg-hero::before{content:'';position:absolute;top:-40%;right:-20%;width:220px;height:220px;border-radius:50%;background:rgba(0,168,150,0.1)}
+.reg-hero .rh-chapter{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--teal);text-transform:uppercase;margin-bottom:8px}
+.reg-hero .rh-title{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:white;margin-bottom:6px}
+.reg-hero .rh-sub{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.5}
+
+.chapter-badges{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+.ch-badge{flex-shrink:0;background:white;border-radius:10px;padding:10px 14px;text-align:center;border:1.5px solid var(--bdr);min-width:90px}
+.ch-badge.active{border-color:var(--teal);background:var(--teallt)}
+.ch-badge .cb-num{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.ch-badge .cb-name{font-size:11px;font-weight:600;color:var(--text);line-height:1.3}
+.ch-badge.active .cb-name{color:var(--teal)}
+.ch-badge .cb-status{font-size:10px;margin-top:4px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.field input,.field select{width:100%;background:white;border:1.5px solid var(--bdr);color:var(--text);padding:12px 14px;font-family:'Inter',sans-serif;font-size:14px;border-radius:10px;outline:none;transition:all 0.2s}
+.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,168,150,0.1)}
+
+.btn-start{width:100%;background:linear-gradient(135deg,var(--teal),#00c9b1);color:var(--navy);border:none;padding:16px;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:12px;transition:all 0.25s;box-shadow:0 4px 18px rgba(0,168,150,0.35)}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,168,150,0.45)}
+.btn-start:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ── VIDEO SCREEN ── */
+.video-header{background:white;border-radius:14px;padding:14px 16px;margin-bottom:14px;border:1px solid var(--bdr);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.vh-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.vh-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.vh-name{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:var(--text)}
+.vh-id{font-size:11px;color:var(--muted);margin-top:2px}
+.vh-progress{display:flex;align-items:center;gap:10px}
+.vhp-bar{flex:1;height:6px;background:var(--bdr);border-radius:10px;overflow:hidden}
+.vhp-fill{height:100%;background:linear-gradient(90deg,var(--teal),#00c9b1);border-radius:10px;width:0%;transition:width 0.5s ease}
+.vhp-pct{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--teal);min-width:32px;text-align:right}
+
+/* Video container */
+.video-wrap{position:relative;width:100%;padding-bottom:56.25%;background:black;border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+
+/* Overlay when not started */
+.video-overlay{position:absolute;inset:0;background:rgba(13,31,60,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.3s;z-index:10}
+.video-overlay.hidden{opacity:0;pointer-events:none}
+.vo-play{width:70px;height:70px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px;box-shadow:0 4px 20px rgba(0,168,150,0.5)}
+.vo-title{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:white;margin-bottom:6px;text-align:center}
+.vo-sub{font-size:12px;color:rgba(255,255,255,0.6);text-align:center}
+
+/* Warning bar */
+.warn-bar{background:var(--orlt);border:1.5px solid var(--orange);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--text);display:flex;align-items:center;gap:8px}
+.warn-bar .wb-icon{font-size:18px;flex-shrink:0}
+
+/* Completion button — locked until video done */
+.btn-complete{width:100%;background:linear-gradient(135deg,var(--green),#27ae60);color:white;border:none;padding:16px;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:12px;transition:all 0.25s;box-shadow:0 4px 18px rgba(26,138,74,0.3);display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-complete:disabled{background:linear-gradient(135deg,#94a3b8,#94a3b8);cursor:not-allowed;box-shadow:none;opacity:0.7}
+.btn-complete:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,138,74,0.4)}
+
+/* ── SUCCESS SCREEN ── */
+#successScreen{text-align:center;padding:20px}
+.cert-card{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:20px;padding:28px 20px;margin-bottom:16px;
+  border:2px solid var(--teal);position:relative;overflow:hidden;
+}
+.cert-card::before{content:'';position:absolute;top:-30%;right:-15%;width:200px;height:200px;border-radius:50%;background:rgba(0,168,150,0.1)}
+.cert-badge{font-size:60px;margin-bottom:14px;animation:certPop 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both}
+@keyframes certPop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.cert-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.cert-name{font-family:'Montserrat',sans-serif;font-size:26px;font-weight:900;color:white;margin-bottom:6px}
+.cert-chapter{font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:14px}
+.cert-ref{background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 16px;display:inline-block;font-family:'Montserrat',monospace;font-size:12px;color:var(--teal);letter-spacing:2px;font-weight:700}
+
+.success-detail{background:white;border-radius:12px;border:1px solid var(--bdr);padding:16px;text-align:left;margin-bottom:14px;font-size:13px;color:var(--text);line-height:1.8}
+.success-detail strong{color:var(--navy)}
+
+.email-status{background:var(--greenlt);border:1.5px solid var(--green);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:10px}
+.email-status .es-icon{font-size:22px;flex-shrink:0}
+
+.btn-next-chapter{width:100%;background:linear-gradient(135deg,var(--navy),var(--blue));color:white;border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:12px;margin-bottom:10px}
+.btn-restart{width:100%;background:none;border:2px solid var(--bdr);color:var(--muted);padding:13px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:12px}
+.btn-restart:hover{border-color:var(--teal);color:var(--teal)}
+
+/* ── FOOTER ── */
+.footer{text-align:center;margin-top:24px;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-right" style="text-align:left">
+    <div class="hr-title">HSEQ Induction Training</div>
+    <div class="hr-sub">Site Safety · Mandatory Training</div>
+  </div>
+</div>
+<div class="header-bar"></div>
+
+<div class="wrap">
+
+<!-- ════════════════════
+     SCREEN 1 — REGISTER
+════════════════════ -->
+<div class="screen active" id="regScreen">
+
+  <div class="reg-hero">
+    <div class="rh-chapter">HSEQ Induction Training · Site Safety</div>
+    <div class="rh-title">Site Rules & Safety</div>
+    <div class="rh-sub">Watch the training video and complete your induction.<br>Takes approximately 3-5 minutes.</div>
+  </div>
+
+
+
+  <div class="field">
+    <label>Full Name *</label>
+    <input type="text" id="workerName" placeholder="e.g. Ahmed Al-Rashidi" autocomplete="name">
+  </div>
+  <div class="field">
+    <label>Company ID *</label>
+    <input type="text" id="workerId" placeholder="e.g. EMP-00412" autocomplete="off">
+  </div>
+  <div class="field">
+    <label>Company / Contractor</label>
+    <input type="text" id="workerCompany" placeholder="e.g. EFSIM Facilities Management">
+  </div>
+  <div class="field">
+    <label>Department</label>
+    <select id="workerDept">
+      <option value="">Select department...</option>
+      <option>QHSE Department</option>
+      <option>Hard Services</option>
+      <option>Soft Services</option>
+      <option>Management</option>
+      <option>Admin Department</option>
+      <option>Fire Department</option>
+      <option>Utility Department</option>
+      <option>Contractor</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <button class="btn-start" id="startBtn" onclick="startInduction()" disabled>
+    ▶ &nbsp; Start Induction Training
+  </button>
+
+  <div class="footer">HSEQ Division · Mandatory Training</div>
+</div>
+
+<!-- ════════════════════
+     SCREEN 2 — VIDEO
+════════════════════ -->
+<div class="screen" id="videoScreen">
+
+  <div class="video-header">
+    <div class="vh-top">
+      <div class="vh-avatar">👷</div>
+      <div>
+        <div class="vh-name" id="displayName">—</div>
+        <div class="vh-id" id="displayId">—</div>
+      </div>
+    </div>
+    <div class="vh-progress">
+      <div class="vhp-bar"><div class="vhp-fill" id="progressFill"></div></div>
+      <div class="vhp-pct" id="progressPct">0%</div>
+    </div>
+  </div>
+
+  <!-- YouTube Video -->
+  <div class="video-wrap">
+    <iframe id="ytPlayer"
+      src="https://www.youtube.com/embed/bJObaN26xlk?enablejsapi=1&rel=0&modestbranding=1&playsinline=1"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+    <div class="video-overlay" id="videoOverlay" onclick="startVideo()">
+      <div class="vo-play">▶</div>
+      <div class="vo-title">Site Rules Training Video</div>
+      <div class="vo-sub">Tap to start your induction video</div>
+    </div>
+  </div>
+
+  <div class="warn-bar" id="warnBar">
+    <span class="wb-icon">⚠️</span>
+    <span id="warnText">You must watch the complete video to receive your completion certificate.</span>
+  </div>
+
+  <button class="btn-complete" id="completeBtn" onclick="submitCompletion()" disabled>
+    🔒 &nbsp; Complete Induction — Watch Video First
+  </button>
+
+  <div class="footer">HSEQ Division · Site Safety Induction</div>
+</div>
+
+<!-- ════════════════════
+     SCREEN 3 — SUCCESS
+════════════════════ -->
+<div class="screen" id="successScreen">
+
+  <div class="cert-card">
+    <div class="cert-badge">🏅</div>
+    <div class="cert-title">Certificate of Completion</div>
+    <div class="cert-name" id="certName">—</div>
+    <div class="cert-chapter">Has successfully completed<br><strong style="color:white">Site Rules</strong><br>HSEQ Induction Training</div>
+    <div class="cert-ref" id="certRef">REF: IND-000000</div>
+  </div>
+
+  <div class="email-status" id="emailStatus">
+    <span class="es-icon">📧</span>
+    <span id="emailStatusText">Sending completion notification...</span>
+  </div>
+
+  <div class="success-detail" id="successDetail"></div>
+
+  <button class="btn-next-chapter" onclick="nextChapter()">
+    ▶ &nbsp; Training Complete
+  </button>
+  <button class="btn-restart" onclick="restartInduction()">↩ &nbsp; Start Again</button>
+
+  <div class="footer">HSEQ Division · Keep Your Site Safe</div>
+</div>
+
+</div><!-- end wrap -->
+
+<!-- YouTube API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+// ═══════════════════════════════════════════
+// ⚙️ CONFIGURATION
+// ═══════════════════════════════════════════
+const EMAILJS_PUBLIC   = 'WjM04xDHP4FVYE4eR';
+const EMAILJS_SERVICE  = 'service_ldns21f';
+const EMAILJS_TEMPLATE = 'template_m8jreai';
+const NOTIFY_EMAIL     = 'abdulhadishah54@gmail.com';
+// ═══════════════════════════════════════════
+
+// Load EmailJS
+const ejsScript = document.createElement('script');
+ejsScript.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
+ejsScript.onload = () => emailjs.init(EMAILJS_PUBLIC);
+document.head.appendChild(ejsScript);
+
+// ── State ──
+let workerData    = {};
+let videoComplete = false;
+let player        = null;
+let progressTimer = null;
+let completionRef = '';
+
+// ── Enable start button when fields filled ──
+['workerName','workerId'].forEach(id => {
+  document.getElementById(id).addEventListener('input', checkFields);
+});
+function checkFields() {
+  const n = document.getElementById('workerName').value.trim();
+  const i = document.getElementById('workerId').value.trim();
+  document.getElementById('startBtn').disabled = !(n && i);
+}
+
+// ── START INDUCTION ──
+function startInduction() {
+  workerData = {
+    name:    document.getElementById('workerName').value.trim(),
+    id:      document.getElementById('workerId').value.trim(),
+    company: document.getElementById('workerCompany').value.trim() || 'Not specified',
+    dept:    document.getElementById('workerDept').value || 'Not specified',
+    chapter: 'Site Rules — HSEQ Induction',
+    startTime: new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+  };
+  completionRef = 'IND-' + Date.now().toString().slice(-8);
+
+  document.getElementById('displayName').textContent = workerData.name;
+  document.getElementById('displayId').textContent   = workerData.id + ' · ' + workerData.company;
+
+  showScreen('videoScreen');
+}
+
+// ── YOUTUBE PLAYER API ──
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('ytPlayer', {
+    events: {
+      onStateChange: onPlayerStateChange,
+      onReady: onPlayerReady
+    }
+  });
+}
+
+function onPlayerReady(e) {
+  console.log('YouTube player ready');
+}
+
+let videoDuration = 0;
+function onPlayerStateChange(e) {
+  if (e.data === YT.PlayerState.PLAYING) {
+    document.getElementById('videoOverlay').classList.add('hidden');
+    videoDuration = player.getDuration();
+    startProgressTracking();
+  }
+  if (e.data === YT.PlayerState.ENDED) {
+    markVideoComplete();
+  }
+  if (e.data === YT.PlayerState.PAUSED) {
+    clearInterval(progressTimer);
+  }
+}
+
+function startVideo() {
+  if (player && player.playVideo) player.playVideo();
+  document.getElementById('videoOverlay').classList.add('hidden');
+}
+
+function startProgressTracking() {
+  clearInterval(progressTimer);
+  progressTimer = setInterval(() => {
+    if (!player || !player.getCurrentTime) return;
+    const current  = player.getCurrentTime();
+    const duration = player.getDuration() || videoDuration || 1;
+    const pct      = Math.min(Math.round((current / duration) * 100), 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
+    // Unlock button at 90% watched
+    if (pct >= 90 && !videoComplete) markVideoComplete();
+  }, 1000);
+}
+
+function markVideoComplete() {
+  clearInterval(progressTimer);
+  videoComplete = true;
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent  = '100%';
+
+  const btn = document.getElementById('completeBtn');
+  btn.disabled = false;
+  btn.innerHTML = '✅ &nbsp; Complete Induction &amp; Get Certificate';
+
+  document.getElementById('warnBar').style.background = 'var(--greenlt)';
+  document.getElementById('warnBar').style.borderColor = 'var(--green)';
+  document.getElementById('warnText').textContent = '✅ Video complete! Tap the button below to receive your certificate.';
+}
+
+// ── SUBMIT COMPLETION ──
+async function submitCompletion() {
+  const btn = document.getElementById('completeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '📤 &nbsp; Saving completion...';
+
+  workerData.completionTime = new Date().toLocaleString('en-GB', {
+    day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+  });
+  workerData.ref = completionRef;
+
+  // Populate certificate
+  document.getElementById('certName').textContent = workerData.name;
+  document.getElementById('certRef').textContent  = 'REF: ' + completionRef;
+  document.getElementById('successDetail').innerHTML = `
+    <strong>Name:</strong> ${workerData.name}<br>
+    <strong>ID:</strong> ${workerData.id}<br>
+    <strong>Company:</strong> ${workerData.company}<br>
+    <strong>Department:</strong> ${workerData.dept}<br>
+    <strong>Chapter:</strong> ${workerData.chapter}<br>
+    <strong>Started:</strong> ${workerData.startTime}<br>
+    <strong>Completed:</strong> ${workerData.completionTime}<br>
+    <strong>Reference:</strong> ${completionRef}
+  `;
+
+  showScreen('successScreen');
+
+  // Send email notification
+  try {
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+      to_email:    NOTIFY_EMAIL,
+      subject:     `✅ HSEQ Induction Completed — ${workerData.name} — ${completionRef}`,
+      ref:         completionRef,
+      hazard:      'HSEQ Induction Completion',
+      severity:    'INFO',
+      category:    workerData.chapter,
+      location:    workerData.company + ' · ' + workerData.dept,
+      description: `${workerData.name} has successfully completed ${workerData.chapter}`,
+      actions:     `Worker ID: ${workerData.id}\nCompany: ${workerData.company}\nDepartment: ${workerData.dept}\nStarted: ${workerData.startTime}\nCompleted: ${workerData.completionTime}`,
+      officer:     workerData.name,
+      datetime:    workerData.completionTime,
+    });
+    document.getElementById('emailStatus').style.background = 'var(--greenlt)';
+    document.getElementById('emailStatusText').textContent  = '✅ Completion notification sent to HSEQ Manager successfully.';
+  } catch(err) {
+    document.getElementById('emailStatus').style.background = 'var(--orlt)';
+    document.getElementById('emailStatusText').textContent  = '⚠️ Notification pending — completion recorded locally.';
+  }
+}
+
+function nextChapter() {
+  alert('Your induction training is complete!\n\nYour completion has been recorded and sent to the HSEQ team. ✅');
+}
+
+function restartInduction() {
+  videoComplete = false;
+  clearInterval(progressTimer);
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressPct').textContent  = '0%';
+  document.getElementById('completeBtn').disabled = true;
+  document.getElementById('completeBtn').innerHTML = '🔒 &nbsp; Complete Induction — Watch Video First';
+  document.getElementById('workerName').value  = '';
+  document.getElementById('workerId').value    = '';
+  document.getElementById('workerCompany').value = '';
+  document.getElementById('workerDept').value  = '';
+  document.getElementById('startBtn').disabled = true;
+  showScreen('regScreen');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
